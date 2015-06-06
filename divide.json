@@ -1,0 +1,5 @@
+{
+  "regions": [0, 1, 2, 3],
+  "name": ["aaa", "bbb", "ccc", "ddd"],
+  "path": "./"
+}

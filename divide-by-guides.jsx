@@ -10,13 +10,20 @@ var defaultSetting = {
 main();
 
 function main() {
+  if (!app.activeDocument.saved && !confirm("源文件未保存，是否保存并开始处理")) {
+    return;
+  }
   var userSetting = readConfig("./divide.json");
   var setting = mergeSetting(defaultSetting, userSetting);
 
   var coordinates = getCoordinatesFromGuides(app.activeDocument.guides);
   var regions = getRegionsFromCoordinates(coordinates, setting.regions);
 
-  saveRegions(regions, setting.path, setting.name);
+  saveRegions(regions, app.activeDocument.path+setting.path, setting.name);
+
+  if (confirm("分隔完成，是否关闭当前源文件")) {
+    app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+  }
 }
 
 function mergeSetting(setting1, setting2) {
@@ -109,6 +116,10 @@ function saveRegions(regions, path, fileNames) {
 }
 
 function saveRegion4Web(selectionRef, region, filePath) {
+  var fileDirpath = getDirpath4File(filePath);
+  if (!Folder(fileDirpath).exists) {
+    new Folder(fileDirpath).create();
+  }
   var file = new File(filePath);
   var regionWidth = region[1][0] - region[0][0];
   var regionHeight = region[2][1] - region[1][1];
@@ -121,6 +132,10 @@ function saveRegion4Web(selectionRef, region, filePath) {
   exportDocument(tmpDoc, file, SaveDocumentType.JPEG);
 
   tmpDoc.close(SaveOptions.DONOTSAVECHANGES);
+}
+
+function getDirpath4File(filePath) {
+  return filePath.substring(0,filePath.lastIndexOf("\/")+1);
 }
 
 function exportDocument(doc, savefile, saveformat) {

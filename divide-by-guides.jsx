@@ -13,7 +13,7 @@ function main() {
   if (!app.activeDocument.saved && !confirm("源文件未保存，是否保存并开始处理")) {
     return;
   }
-  var userSetting = readConfig("./divide.json");
+  var userSetting = readConfig(app.activeDocument.path + "./divide.json");
   var setting = mergeSetting(defaultSetting, userSetting);
 
   var coordinates = getCoordinatesFromGuides(app.activeDocument.guides);
@@ -157,7 +157,9 @@ function getGuides(direction, isResultSort, guides) {
   }
 
   if (isResultSort) {
-    result = result.sort();
+    result = result.sort(function(a, b) {
+      return a.value - b.value ;
+    });
   }
   return result;
 }

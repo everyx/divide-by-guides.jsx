@@ -13,6 +13,14 @@ function main() {
   if (!app.activeDocument.saved && !confirm("源文件未保存，是否保存并开始处理")) {
     return;
   }
+  var startRulerUnits = app.preferences.rulerUnits;
+  var startTypeUnits = app.preferences.typeUnits;
+  var startDisplayDialogs = app.displayDialogs;
+  
+  app.preferences.rulerUnits = Units.PIXELS;
+  app.preferences.typeUnits = TypeUnits.PIXELS;
+  app.displayDialogs = DialogModes.NO;
+    
   var userSetting = readConfig(app.activeDocument.path + "./divide.json");
   var setting = mergeSetting(defaultSetting, userSetting);
 
@@ -21,6 +29,10 @@ function main() {
 
   saveRegions(regions, app.activeDocument.path+setting.path, setting.name);
 
+  app.preferences.rulerUnits = startRulerUnits;
+  app.preferences.typeUnits = startTypeUnits;
+  app.displayDialogs = startDisplayDialogs;
+  
   if (confirm("分隔完成，是否关闭当前源文件")) {
     app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
   }
@@ -123,7 +135,6 @@ function saveRegion4Web(selectionRef, region, filePath) {
   var file = new File(filePath);
   var regionWidth = region[1][0] - region[0][0];
   var regionHeight = region[2][1] - region[1][1];
-
   selectionRef.select(region);
   selectionRef.copy();
 

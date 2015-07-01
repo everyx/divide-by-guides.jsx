@@ -120,7 +120,9 @@ function saveRegions(regions, path, fileNames) {
       fileName = i;
     }
 
-    saveRegion4Web(docRef.selection, regions[i], path + fileName + ".jpg");
+    try {
+        saveRegion4Web(docRef.selection, regions[i], path + fileName + ".jpg");
+    } catch(e){}
 
     app.activeDocument = docRef;
     docRef.activeHistoryState = state;

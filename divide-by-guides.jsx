@@ -54,15 +54,22 @@ function mergeSetting(setting1, setting2) {
 }
 
 function readConfig(configFilePath) {
+    var result = '';
+    
     var configFile = new File(configFilePath);
     configFile.open('r');
+
     var configStr = "";
     while (!configFile.eof) {
         configStr += configFile.readln();
     }
     configFile.close();
     configStr = configStr.replace(/(^\s*)|(\s*$)/g,"");
-    var result = eval('('+configStr+')');
+    if (configStr) {
+        result = eval('('+configStr+')');
+    } else {
+        result = {  "regions": "", "name": "", "path": "./",};
+    }
     return result;
 }
 

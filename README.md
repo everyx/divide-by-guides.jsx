@@ -24,3 +24,4 @@ A photoshop script to help people divide layout by guides
 ![Order examples](order.png)
 2. `name`: 每个 region 保存时的文件名。和上面 `regions` 字段的顺序是一一对应的；
 3. `path`: 保存目录的路径。一般相对路径用的多一些，`./`就是保存在你打开的 `psd` 的相同目录下。
+4. `"namePrefix`: 保存文件的文件名的公共前缀。

@@ -3,8 +3,9 @@
 
 var defaultSetting = {
   "regions": "",
+  "namePrefix": "",
   "name": "",
-  "path": "./",
+  "path": "./"
 };
 
 main();
@@ -27,7 +28,7 @@ function main() {
   var coordinates = getCoordinatesFromGuides(app.activeDocument.guides);
   var regions = getRegionsFromCoordinates(coordinates, setting.regions);
 
-  saveRegions(regions, app.activeDocument.path+setting.path, setting.name);
+  saveRegions(regions, app.activeDocument.path+setting.path, setting.namePrefix, setting.name);
 
   app.preferences.rulerUnits = startRulerUnits;
   app.preferences.typeUnits = startTypeUnits;
@@ -42,6 +43,9 @@ function mergeSetting(setting1, setting2) {
   var result;
   if (setting2.regions) {
     setting1.regions = setting2.regions;
+  }
+  if (setting2.namePrefix) {
+    setting1.namePrefix = setting2.namePrefix;
   }
   if (setting2.name) {
     setting1.name = setting2.name;
@@ -68,7 +72,7 @@ function readConfig(configFilePath) {
     if (configStr) {
         result = eval('('+configStr+')');
     } else {
-        result = {  "regions": "", "name": "", "path": "./",};
+        result = {  "regions": "", "name": "", "path": "./"};
     }
     return result;
 }
@@ -114,7 +118,7 @@ function getRegionsFromCoordinates(coordinates, needSavedRegions) {
   return result;
 }
 
-function saveRegions(regions, path, fileNames) {
+function saveRegions(regions, path, fileNamesPrefix, fileNames) {
   var docRef = app.activeDocument;
   for (var i = 0; i < regions.length; i++) {
     var state = docRef.activeHistoryState;
@@ -126,6 +130,8 @@ function saveRegions(regions, path, fileNames) {
     } else {
       fileName = i;
     }
+
+    fileName = fileNamesPrefix + fileName;
 
     try {
         saveRegion4Web(docRef.selection, regions[i], path + fileName + ".jpg");
